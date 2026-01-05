@@ -9,18 +9,67 @@ from exception.custom_exception_legacy import DocumentPortalException
 from mylogger.custom_logger import CustomLogger
 
 log=CustomLogger().get_logger(__name__)
-dotenv_path="/Users/rajankumar/MM/azure.env"
-load_dotenv(dotenv_path)
-openai_api_key=os.getenv("OPENAI_API_KEY")
+#dotenv_path="/Users/rajankumar/MM/azure.env"
+#load_dotenv(dotenv_path)
+#openai_api_key=os.getenv("OPENAI_API_KEY")
+
+class ApiKeyManager:
+    REQUIRED_KEYS = ["OPENAI_API_KEY"]
+
+    def __init__(self):
+        self.api_keys = {}
+        raw = os.getenv("API_KEYS")
+
+        if raw:
+            try:
+                parsed = json.loads(raw)
+                if not isinstance(parsed, dict):
+                    raise ValueError("API_KEYS is not a valid JSON object")
+                self.api_keys = parsed
+                log.info("Loaded API_KEYS from ECS secret")
+            except Exception as e:
+                log.warning("Failed to parse API_KEYS as JSON", error=str(e))
+
+        # Fallback to individual env vars
+        for key in self.REQUIRED_KEYS:
+            if not self.api_keys.get(key):
+                env_val = os.getenv(key)
+                if env_val:
+                    self.api_keys[key] = env_val
+                    log.info(f"Loaded {key} from individual env var")
+
+        # Final check
+        missing = [k for k in self.REQUIRED_KEYS if not self.api_keys.get(k)]
+        if missing:
+            log.error("Missing required API keys", missing_keys=missing)
+            raise DocumentPortalException("Missing API keys", sys)
+
+        log.info("API keys loaded", keys={k: v[:6] + "..." for k, v in self.api_keys.items()})
+
+
+    def get(self, key: str) -> str:
+        val = self.api_keys.get(key)
+        if not val:
+            raise KeyError(f"API key for {key} is missing")
+        return val
 class ModelLoader:
     """
     Loads embedding models and LLMs based on config and environment.
     """
 
     def __init__(self):
-       self.openai_api_key = openai_api_key
-       self.config = load_config()
        self.log = CustomLogger().get_logger(__name__)
+       if os.getenv("ENV", "local").lower() != "production":
+            load_dotenv()
+            log.info("Running in LOCAL mode: .env loaded")
+       else:
+            log.info("Running in PRODUCTION mode")
+       
+       self.api_key_mgr = ApiKeyManager()
+       #self.openai_api_key = openai_api_key
+       self.config = load_config()
+       log.info("YAML config loaded", config_keys=list(self.config.keys()))
+       
 
     def load_embeddings(self):
         """
