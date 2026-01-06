@@ -80,7 +80,7 @@ class ModelLoader:
             
             self.log.info("Loading embedding model", model=self.model_name)
             return OpenAIEmbeddings(model=self.model_name,
-                                                openai_api_key=elf.api_key_mgr.get("OPENAI_API_KEY")) #type: ignore
+                                                openai_api_key=self.api_key_mgr.get("OPENAI_API_KEY")) #type: ignore
         except Exception as e:
             log.error("Error loading embedding model", error=str(e))
             raise DocumentPortalException("Failed to load embedding model", sys)
