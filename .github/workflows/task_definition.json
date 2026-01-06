@@ -1,5 +1,5 @@
 {
-  "family": "documentportaltd",
+  "family": "onlinedocumentportal",
   "networkMode": "awsvpc",
   "executionRoleArn": "arn:aws:iam::048119077995:role/ecsTaskExecutionRole",
   "requiresCompatibilities": ["FARGATE"],
@@ -7,7 +7,7 @@
   "memory": "8192",
   "containerDefinitions": [
     {
-      "name": "cloud-document-portal-cluster",
+      "name": "cloud-document-portal-app",
       "image": "048119077995.dkr.ecr.ap-south-1.amazonaws.com/clouddocumentportal",
       "cpu": 1024,
       "essential": true,
@@ -16,7 +16,7 @@
           "containerPort": 8080,
           "hostPort": 8080,
           "protocol": "tcp",
-          "name": "cloud-document-portal-cluster-8080-tcp",
+          "name": "cloud-document-portal-app-8080-tcp",
           "appProtocol": "http"
         }
       ],
@@ -36,7 +36,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/documentportaltd",
+          "awslogs-group": "/ecs/onlinedocumentportal",
           "awslogs-region": "ap-south-1",
           "awslogs-stream-prefix": "ecs",
           "awslogs-create-group": "true"

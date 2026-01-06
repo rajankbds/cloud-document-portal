@@ -7,10 +7,10 @@ on:
 env:
   AWS_REGION: ap-south-1
   ECR_REPOSITORY: clouddocumentportal
-  ECS_SERVICE: document-portal-service
+  ECS_SERVICE: cloud-document-portal-service
   ECS_CLUSTER: cloud-document-portal-cluster
   ECS_TASK_DEFINITION: .github/workflows/task_definition.json
-  CONTAINER_NAME: cloud-document-portal-cluster"
+  CONTAINER_NAME: cloud-document-portal-app
 
 permissions:
   id-token: write
