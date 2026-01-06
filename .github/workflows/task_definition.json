@@ -36,7 +36,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/onlinedocumentportal",
+          "awslogs-group": "/ecs/onlinedocumentportal-log-group",
           "awslogs-region": "ap-south-1",
           "awslogs-stream-prefix": "ecs",
           "awslogs-create-group": "true"
