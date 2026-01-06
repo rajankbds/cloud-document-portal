@@ -7,7 +7,7 @@
   "memory": "8192",
   "containerDefinitions": [
     {
-      "name": "document-portal-container",
+      "name": "cloud-document-portal-cluster",
       "image": "048119077995.dkr.ecr.ap-south-1.amazonaws.com/clouddocumentportal",
       "cpu": 1024,
       "essential": true,
@@ -16,7 +16,7 @@
           "containerPort": 8080,
           "hostPort": 8080,
           "protocol": "tcp",
-          "name": "document-portal-container-8080-tcp",
+          "name": "cloud-document-portal-cluster-8080-tcp",
           "appProtocol": "http"
         }
       ],
